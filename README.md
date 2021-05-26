@@ -18,7 +18,7 @@ using CubeMx at https://github.com/jefftenney/LPTIM-Tick/tree/d18c796276a6b54cb0
 
 (5) Genrate code 
 
-(6) Copy implementation of low power from LTIM-Tick `ulp.c`, `ulp.h`, `ulp.c`, `lptimTick.c`, `FreeRTOSConfig.c` (overwrite existing) 
+(6) Copy implementation of low power from LTIM-Tick `ulp.c`, `ulp.h`, `ulp.c`, `lptimTick.c`, `FreeRTOSConfig.h` (overwrite existing) 
 
 (7) Add initalization for ulp in `main.c`, disable TIM17 (timebase for HAL) in mainTask (FreeRTOS task), so we don't get interrupted by these 
 
@@ -31,7 +31,7 @@ using CubeMx at https://github.com/jefftenney/LPTIM-Tick/tree/d18c796276a6b54cb0
   (c) ~~`PWR_CR1_LPMS_STOP2` is called `PWR_CR1_LPMS_2` for this MCU~~ *
 
 *(b) & (c) were wrongfully changed, they caused the module to go to SHUTDOWN mode, from which it cannot wake
-usin the LPTIM1 interrupt*
+using the LPTIM1 interrupt*
 
 ## Testing
 
@@ -50,7 +50,7 @@ The `vUlpOnPeripheralsActive(1)` line is removed. Application runs again.
 => Adding debug toggle to interrupt nothing happens LPTIM1 interrupt routine is never
 executed. 
 
-*Note* a first attepmt was to add RTC alarm, this worked, but should not have to be done, as
+*Note* a first attempt was to add RTC alarm, this worked, but should not have to be done, as
 LPTIM1 should wake from STOPx mode in the implementation. 
 
 
