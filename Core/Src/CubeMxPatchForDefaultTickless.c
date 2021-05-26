@@ -11,7 +11,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h" // for configASSERT(), which uses taskDISABLE_INTERRUPTS()
-#include "stm32l4xx.h"
+#include "stm32wlxx.h"
 
 // Bug fix only.  Applies only to configUSE_TICKLESS_IDLE == 1.  See above.
 void PreSleepProcessing(uint32_t ulExpectedIdleTime)

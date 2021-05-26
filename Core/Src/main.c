@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ulp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,6 +86,26 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  // Integrate lptimTick.c -- Start of Block
+  //
+  //      Code in lptimTick.c expects LSE or LSI to be configured and started by the application code.  This
+  // RCC code starts the LSE, but it is commented out because this demo application uses the RTC, so CubeMX
+  // already generates the code we need to start LSE.  See SystemClock_Config().
+  //
+  //  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  //  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
+  //  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  //  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  //  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  //  {
+  //    Error_Handler();
+  //  }
+  //
+  // Integrate lptimTick.c -- End of Block
+
+  //      Initialize Ultra-Low Power support (ULP).
+  //
+  vUlpInit();
 
   /* USER CODE END SysInit */
 
@@ -246,10 +266,20 @@ static void MX_GPIO_Init(void)
 void mainOsTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
+
+   //      Stop the timer that provides the HAL tick.  Now it won't needlessly interrupt tickless idle periods
+   // that use sleep mode.  (The HAL tick already can't interrupt tickless idle periods that use stop mode,
+   // because the HAL timer doesn't operate in stop mode.)  In a real application, the HAL tick might be
+   // required by the HAL even after FreeRTOS has control.  It's still best to stop the timer here, and then
+   // define HAL_GetTick() and HAL_Delay() to use the FreeRTOS tick (and delay) once available.
+   //
+   TIM17->CR1 &= ~TIM_CR1_CEN;  // wish CubeMX would generate a symbol for the HAL tick timer
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(500);
+
   }
   /* USER CODE END 5 */
 }

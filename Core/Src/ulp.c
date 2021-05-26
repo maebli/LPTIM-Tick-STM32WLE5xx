@@ -1,6 +1,6 @@
 // Ultra Low Power API implementation (ulp.c)
 
-#include "stm32l4xx.h"
+#include "stm32wlxx.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "ulp.h"
@@ -27,15 +27,14 @@ void vUlpInit()
 
    //      Be sure the MCU wakes up from stop mode on the same clock we normally use as the core clock, if
    // possible.  Might as well give the MCU a head start getting the clock going while waking from STOP.
-   //
-   if ( (RCC->CFGR & RCC_CFGR_SWS_Msk) == RCC_CFGR_SWS_HSI )
-   {
+   // reading dynamically like in original not working yet
+
+#ifdef USING_HSI_AS_SYS_CLOCK
       SET_BIT(RCC->CFGR, RCC_CFGR_STOPWUCK);
-   }
-   else if ( (RCC->CFGR & RCC_CFGR_SWS_Msk) == RCC_CFGR_SWS_MSI )
-   {
+#else
       CLEAR_BIT(RCC->CFGR, RCC_CFGR_STOPWUCK);
-   }
+#endif
+
 }
 
 static volatile int xDeepSleepForbiddenFlags = 0;
@@ -81,12 +80,12 @@ void vUlpPreSleepProcessing()
    if (xDeepSleepForbiddenFlags == 0)
    {
       useDeepSleep = pdTRUE;
-      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_STOP2);
+      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_2);
    }
    else if ((xDeepSleepForbiddenFlags & ~ulpPERIPHERALS_OK_IN_STOP1) == 0)
    {
       useDeepSleep = pdTRUE;
-      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_STOP1);
+      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_1);
    }
 
    if (useDeepSleep)
