@@ -5,6 +5,12 @@
 #include "task.h"
 #include "ulp.h"
 
+#define PWR_CR1_LPMS_STOP0 (0)
+#define PWR_CR1_LPMS_STOP1 (PWR_CR1_LPMS_0)
+#define PWR_CR1_LPMS_STOP2 (PWR_CR1_LPMS_1)
+#define PWR_CR1_LPMS_STANDBY (PWR_CR1_LPMS_0 | PWR_CR1_LPMS_1)
+#define PWR_CR1_LPMS_SHUTDOWN (PWR_CR1_LPMS_2)
+
 void vUlpInit()
 {
    #ifdef configMIN_RUN_BETWEEN_DEEP_SLEEPS    // Errata workaround
@@ -80,12 +86,12 @@ void vUlpPreSleepProcessing()
    if (xDeepSleepForbiddenFlags == 0)
    {
       useDeepSleep = pdTRUE;
-      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_2);
+      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_STOP2);
    }
    else if ((xDeepSleepForbiddenFlags & ~ulpPERIPHERALS_OK_IN_STOP1) == 0)
    {
       useDeepSleep = pdTRUE;
-      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_1);
+      MODIFY_REG(PWR->CR1, PWR_CR1_LPMS_Msk, PWR_CR1_LPMS_STOP1);
    }
 
    if (useDeepSleep)

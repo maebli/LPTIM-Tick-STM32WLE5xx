@@ -8,28 +8,30 @@ using CubeMx at https://github.com/jefftenney/LPTIM-Tick/tree/d18c796276a6b54cb0
 
 ## Step by Step Setup 
 
-(1) Create new STM32WLE5CCU6 `*.ioc ` using the CubeMXIDE Wizard
+(1) Create new STM32WLE5CCU6 `*.ioc ` using the CubeMXIDE Wizard 
 
-(2) Add FreeRtos (uses 10.2.1 when I use the wizard) Middleware, configure tasks / timers as required
+(2) Add FreeRtos (uses 10.2.1 when I use the wizard) Middleware, configure tasks / timers as required 
 
-(3) Enable LSE and MSI in the clock diagram
+(3) Enable LSE and MSI in the clock diagram  
 
-(4) Add Debug pin for toggeling, low level debugging
+(4) Add Debug pin for toggeling, low level debugging 
 
-(5) Genrate code
+(5) Genrate code 
 
-(6) Copy implementation of low power from LTIM-Tick `ulp.c`, `ulp.h`, `ulp.c`, `lptimTick.c`, `FreeRTOSConfig.c` (overwrite existing)
+(6) Copy implementation of low power from LTIM-Tick `ulp.c`, `ulp.h`, `ulp.c`, `lptimTick.c`, `FreeRTOSConfig.c` (overwrite existing) 
 
-(7) Add initalization for ulp in `main.c`, disable TIM17 (timebase for HAL) in mainTask (FreeRTOS task), so we don't get interrupted by these
+(7) Add initalization for ulp in `main.c`, disable TIM17 (timebase for HAL) in mainTask (FreeRTOS task), so we don't get interrupted by these 
 
-(8) Adjust `ulp.c` so that it compiles 
+(8) Adjust `ulp.c` so that it compiles  
 
-(a) `CLEAR_BIT(RCC->CFGR, RCC_CFGR_STOPWUCK);` is always set, as SYSCLK is MSI
-	
-(b) `PWR_CR1_LPMS_STOP1` is called `PWR_CR1_LPMS_1` for this MCU
-	
-(b) `PWR_CR1_LPMS_STOP2` is called `PWR_CR1_LPMS_2` for this MCU
+  (a) `CLEAR_BIT(RCC->CFGR, RCC_CFGR_STOPWUCK);` is always set, as SYSCLK is MSI 
 
+  (b) ~~`PWR_CR1_LPMS_STOP1` is called `PWR_CR1_LPMS_1` for this MCU~~ *
+
+  (c) ~~`PWR_CR1_LPMS_STOP2` is called `PWR_CR1_LPMS_2` for this MCU~~ *
+
+*(b) & (c) were wrongfully changed, they caused the module to go to SHUTDOWN mode, from which it cannot wake
+usin the LPTIM1 interrupt*
 
 ## Testing
 
