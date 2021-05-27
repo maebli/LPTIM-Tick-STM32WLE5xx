@@ -170,7 +170,7 @@
 // Otherwise, configLPTIM_REF_CLOCK_HZ equals the frequency of LSE (usually 32768 Hz).
 //
 #ifndef configLPTIM_REF_CLOCK_HZ
-#define configLPTIM_REF_CLOCK_HZ 32768UL
+#define configLPTIM_REF_CLOCK_HZ 32000L
 #endif
 
 //      Symbol configLPTIM_ENABLE_PRECISION, optionally defined in FreeRTOSConfig.h, allows a configuration to

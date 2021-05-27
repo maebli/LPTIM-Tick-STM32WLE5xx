@@ -197,6 +197,7 @@ standard names. */
 
 #endif // configUSE_TICKLESS_IDLE == 2
 
+#define  configTICK_USES_LSI
 /* USER CODE END Defines */
 
 #endif /* FREERTOS_CONFIG_H */
