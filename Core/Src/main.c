@@ -107,6 +107,11 @@ int main(void)
   //
   vUlpInit();
 
+  //HAL_DBGMCU_EnableDBGSleepMode();
+  //HAL_DBGMCU_EnableDBGStopMode();
+  //HAL_DBGMCU_EnableDBGStandbyMode();
+
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
