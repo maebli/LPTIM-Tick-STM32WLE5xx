@@ -35,14 +35,14 @@ using the LPTIM1 interrupt*
 
 ## Testing
 
-### Deep sleep is suppressed
+### Deep sleep is supressed
 
 By adding the line `vUlpOnPeripheralsActive(1);` in main we can supress deep sleep. 
 
 => everything runs smoothly LPTIM1 is triggered every 1/2 second.
 => Debug pin is toggled every 1/2 second
 
-### Deep sleep is not suppressed
+### Deep sleep is not supressed
 
 The `vUlpOnPeripheralsActive(1)` line is removed. Application runs again. 
 
@@ -52,13 +52,6 @@ executed.
 
 *Note* a first attempt was to add RTC alarm, this worked, but should not have to be done, as
 LPTIM1 should wake from STOPx mode in the implementation. 
-
-### Further tests in Deep sleep not suppressed
-
-* Tested using different clock source for LPTIM1, did not solve the issue (LSI instead of LSE)
-* explicitly disabling again HAL_Suspend_Ticks(); HAL_Resume_Ticks() before entering STOP2
-* Entering only STOP1 instead of STOP2
-* Enabling debug mode in STOP/Suspend/Sleep 
 
 
 
