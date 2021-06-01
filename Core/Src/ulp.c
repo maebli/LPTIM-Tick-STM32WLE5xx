@@ -10,6 +10,8 @@
 #define PWR_CR1_LPMS_STOP2 (PWR_CR1_LPMS_1)
 #define PWR_CR1_LPMS_STANDBY (PWR_CR1_LPMS_0 | PWR_CR1_LPMS_1)
 #define PWR_CR1_LPMS_SHUTDOWN (PWR_CR1_LPMS_2)
+#define EXTI_IMR1_LPTIM1  (1UL << 29)   // Specific to STM32WLE5xx
+
 
 void vUlpInit()
 {
@@ -40,6 +42,9 @@ void vUlpInit()
 #else
       CLEAR_BIT(RCC->CFGR, RCC_CFGR_STOPWUCK);
 #endif
+  //      Make sure LPTIM1 can wake the MCU from deep sleep.
+  //
+  EXTI->IMR1 |= EXTI_IMR1_LPTIM1;
 
 }
 
