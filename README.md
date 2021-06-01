@@ -75,7 +75,11 @@ executed.
 LPTIM1 should wake from STOPx mode in the implementation. 
 
 To fix this issue, a solution is proposed (see step (9)). First tests suggest this works!
-Further tests required to check if low power is achieved as expected. 
+Power measurement also shows everything in order:
+
+![Measurement](./.doc/low-power-measurement-tickless-idle.png)
+*Fig 1: Low power measurement using tickless idle LPTIM FreeRTOS port by Jeff Tenney (on branch master), wakeup
+every 500 ms*
 
 ### Further tests in Deep sleep not suppressed
 
