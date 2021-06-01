@@ -23,7 +23,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "ulp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,11 +104,10 @@ int main(void)
 
   //      Initialize Ultra-Low Power support (ULP).
   //
-  vUlpInit();
 
-  //HAL_DBGMCU_EnableDBGSleepMode();
-  //HAL_DBGMCU_EnableDBGStopMode();
-  //HAL_DBGMCU_EnableDBGStandbyMode();
+  HAL_DBGMCU_EnableDBGSleepMode();
+  HAL_DBGMCU_EnableDBGStopMode();
+  HAL_DBGMCU_EnableDBGStandbyMode();
 
 
   /* USER CODE END SysInit */
@@ -120,7 +118,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_TogglePin(DEBUG_PIN_GPIO_Port, DEBUG_PIN_Pin);
   HAL_GPIO_TogglePin(DEBUG_PIN_GPIO_Port, DEBUG_PIN_Pin);
-  //vUlpOnPeripheralsActive(1);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -148,6 +145,7 @@ int main(void)
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
+  vUlpInit();
   /* Start scheduler */
   osKernelStart();
 
@@ -255,7 +253,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -291,12 +289,11 @@ void mainOsTask(void const * argument)
    // required by the HAL even after FreeRTOS has control.  It's still best to stop the timer here, and then
    // define HAL_GetTick() and HAL_Delay() to use the FreeRTOS tick (and delay) once available.
    //
-   TIM17->CR1 &= ~TIM_CR1_CEN;  // wish CubeMX would generate a symbol for the HAL tick timer
 
   /* Infinite loop */
   for(;;)
   {
-    osDelay(500);
+    osDelay(10000);
     HAL_GPIO_TogglePin(DEBUG_PIN_GPIO_Port, DEBUG_PIN_Pin);
 
   }

@@ -76,6 +76,19 @@ void HAL_MspInit(void)
   /* USER CODE END MspInit 1 */
 }
 
+void HAL_LPTIM_MspInit(LPTIM_HandleTypeDef *hlptim)
+{
+  /* ## - 1 - Enable LPTIM clock ############################################ */
+  __HAL_RCC_LPTIM1_CLK_ENABLE();
+
+  /* ## - 2 - Force & Release the LPTIM Periheral Clock Reset ############### */
+  /* Force the LPTIM Periheral Clock Reset */
+  __HAL_RCC_LPTIM1_FORCE_RESET();
+
+  /* Release the LPTIM Periheral Clock Reset */
+  __HAL_RCC_LPTIM1_RELEASE_RESET();
+}
+
 /**
 * @brief RTC MSP Initialization
 * This function configures the hardware resources used in this example

@@ -2,11 +2,25 @@
 
 ## Introduction
 
-This is my attempt to ingreate the LPTIM1 tickless FreeRtos port by the user jefftenney to STM32WLxx (specifcally STM32WLE5CCU6).
+Different examples exist to integrate LPTIM1 as HAL and FreeRTOS time base for low power tickless idle mode. 
+I have looked at two. 
+
+### LPTIM FreeRTOS port by ST (on this seperate branc)
+
+This implementation is based on ST example `.\STM32Cube_FW_L4_V1.15.1\Projects\B-L475E-IOT01A\Applications\FreeRTOS\FreeRTOS_LowPower_LPTIM\`
+It uses the HAL to enter STOP mode, not optimizing the entry as the other port has done. It uses LPTIM in PWM mode.
+
+#### Testing
+
+This port seems to be working in STOP1/2 and Sleep mode. Further testing, and low power measurements are however pending. 
+
+### LPTIM FreeRTOS port by Jeff Tenney (on master branch currently)
+
+On the master branch I first attempted to ingreate the LPTIM1 tickless FreeRtos port by the user jefftenney to STM32WLxx (specifcally STM32WLE5CCU6).
 The gist can be seen at https://gist.github.com/jefftenney/02b313fe649a14b4c75237f925872d72, and there also exists a demo integration
 using CubeMx at https://github.com/jefftenney/LPTIM-Tick/tree/d18c796276a6b54cb0d49d5fb32963d0af0dc1a0.  
 
-## Step by Step Setup 
+#### Step by Step Setup 
 
 (1) Create new STM32WLE5CCU6 `*.ioc ` using the CubeMXIDE Wizard 
 
@@ -33,16 +47,16 @@ using CubeMx at https://github.com/jefftenney/LPTIM-Tick/tree/d18c796276a6b54cb0
 *(b) & (c) were wrongfully changed, they caused the module to go to SHUTDOWN mode, from which it cannot wake
 using the LPTIM1 interrupt*
 
-## Testing
+#### Testing
 
-### Deep sleep is supressed
+##### Deep sleep is supressed
 
 By adding the line `vUlpOnPeripheralsActive(1);` in main we can supress deep sleep. 
 
 => everything runs smoothly LPTIM1 is triggered every 1/2 second.
 => Debug pin is toggled every 1/2 second
 
-### Deep sleep is not supressed
+##### Deep sleep is not supressed
 
 The `vUlpOnPeripheralsActive(1)` line is removed. Application runs again. 
 
@@ -53,7 +67,7 @@ executed.
 *Note* a first attempt was to add RTC alarm, this worked, but should not have to be done, as
 LPTIM1 should wake from STOPx mode in the implementation. 
 
-### Further tests in Deep sleep not suppressed
+##### Further tests in Deep sleep not suppressed
 
 * Tested using different clock source for LPTIM1, did not solve the issue (LSI instead of LSE)
 
