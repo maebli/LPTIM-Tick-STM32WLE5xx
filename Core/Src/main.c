@@ -324,6 +324,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE END Callback 1 */
 }
 
+uint32_t HAL_GetTick(void){
+	return xTaskGetTickCount();
+}
+void HAL_Delay(uint32_t Delay){
+	osDelay(Delay);
+}
+
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
