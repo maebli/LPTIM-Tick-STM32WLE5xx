@@ -325,7 +325,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 uint32_t HAL_GetTick(void){
-	return xTaskGetTickCount();
+	return osKernelSysTick();
 }
 void HAL_Delay(uint32_t Delay){
 	osDelay(Delay);
