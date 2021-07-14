@@ -173,6 +173,13 @@
 #define configLPTIM_REF_CLOCK_HZ 32768UL
 #endif
 
+//      Symbol configLPTIM_CLOCK_DIV, optionally defined in FreeRTOSConfig.h, is the divide factor LPTIM uses on its reference
+// clock.  This symbol must be 1, 2, 4, 8, 16, 32, 64, or 128.  This software configures LPTIM to match.
+//
+#ifndef configLPTIM_CLOCK_DIV
+#define configLPTIM_CLOCK_DIV 8UL
+#endif
+
 //      Symbol configLPTIM_ENABLE_PRECISION, optionally defined in FreeRTOSConfig.h, allows a configuration to
 // eliminate the arithmetic in this software that maintains configTICK_RATE_HZ with perfect precision, as
 // described above in "Perfect Tick Frequency".  The arithmetic corrects for any error in rounding the desired
@@ -201,7 +208,29 @@
 #define traceTICKS_DROPPED(x)
 #endif
 
-#define LPTIM_CLOCK_HZ ( configLPTIM_REF_CLOCK_HZ )
+//      Determine the CFGR setting for the target frequency of LPTIM counting.
+//
+#if (configLPTIM_CLOCK_DIV == 1)
+#define CFGR_VAL (0 << LPTIM_CFGR_PRESC_Pos)
+#elif (configLPTIM_CLOCK_DIV == 2)
+#define CFGR_VAL (1 << LPTIM_CFGR_PRESC_Pos)
+#elif (configLPTIM_CLOCK_DIV == 4)
+#define CFGR_VAL (2 << LPTIM_CFGR_PRESC_Pos)
+#elif (configLPTIM_CLOCK_DIV == 8)
+#define CFGR_VAL (3 << LPTIM_CFGR_PRESC_Pos)
+#elif (configLPTIM_CLOCK_DIV == 16)
+#define CFGR_VAL (4 << LPTIM_CFGR_PRESC_Pos)
+#elif (configLPTIM_CLOCK_DIV == 32)
+#define CFGR_VAL (5 << LPTIM_CFGR_PRESC_Pos)
+#elif (configLPTIM_CLOCK_DIV == 64)
+#define CFGR_VAL (6 << LPTIM_CFGR_PRESC_Pos)
+#elif (configLPTIM_CLOCK_DIV == 128)
+#define CFGR_VAL (7 << LPTIM_CFGR_PRESC_Pos)
+#else
+#error Preprocessor symbol configLPTIM_CLOCK_DIV must be 1, 2, 4, 8, 16, 32, 64, or 128.
+#endif
+
+#define LPTIM_CLOCK_HZ ( configLPTIM_REF_CLOCK_HZ / configLPTIM_CLOCK_DIV )
 
 static TickType_t xMaximumSuppressedTicks;      //   We won't try to sleep longer than this many ticks during
                                                 // tickless idle because any longer might confuse the logic in
@@ -324,7 +353,7 @@ void vPortSetupTimerInterrupt( void )
    //      Configure and start LPTIM.
    //
    LPTIM->IER = LPTIM_IER_CMPMIE | LPTIM_IER_CMPOKIE;   // Modify this register only when LPTIM is disabled.
-   LPTIM->CFGR = (0 << LPTIM_CFGR_PRESC_Pos);           // Modify this register only when LPTIM is disabled.
+   LPTIM->CFGR = CFGR_VAL;           // Modify this register only when LPTIM is disabled.
    LPTIM->CR = LPTIM_CR_ENABLE;
    LPTIM->ARR = 0xFFFF;        // timer period = ARR + 1.  Modify this register only when LPTIM is enabled.
    LPTIM->CMP = ulTimerCountsForOneTick;                // Modify this register only when LPTIM is enabled.
